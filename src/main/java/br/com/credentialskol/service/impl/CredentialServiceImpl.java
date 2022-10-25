@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CredentialServiceImpl implements CredentialService {
 
@@ -21,13 +24,18 @@ public class CredentialServiceImpl implements CredentialService {
     private CredentialRepository repository;
 
     @Override
+    public Flux<CredentialResponse> byHeader(String idCargo) {
+        return repository.findCredentialByHeader(idCargo).map(CredentialResponse::converte);
+    }
+
+    @Override
     public Flux<CredentialResponse> findAll() {
-        return repository.findAll().map(CredentialResponse::converter);
+        return repository.findAll().map(CredentialResponse::converte);
     }
 
     @Override
     public Mono<CredentialResponse> findById(String id) {
-        return repository.findById(id).map(CredentialResponse::converter);
+        return repository.findById(id).map(CredentialResponse::converte);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class CredentialServiceImpl implements CredentialService {
         String password = CriptoCredential.criptografarBase64(dto.getPassword());
         credentials.setPassword(password);
         credentials.setStatus(StatusCredentials.ATIVO);
-        return repository.save(credentials).map(CredentialResponse::converter);
+        return repository.save(credentials).map(CredentialResponse::converte);
     }
 
     @Override
@@ -54,8 +62,7 @@ public class CredentialServiceImpl implements CredentialService {
 
             }
             repository.save(result).subscribe();
-            CredentialResponse response = modelMapper.map(result, CredentialResponse.class);
-            return response;
+            return modelMapper.map(result, CredentialResponse.class);
         });
     }
 
@@ -68,21 +75,9 @@ public class CredentialServiceImpl implements CredentialService {
             credentials.setId(id);
             credentials.setStatus(c.getStatus());
             repository.save(credentials).subscribe();
-            CredentialResponse result = modelMapper.map(credentials, CredentialResponse.class);
-            return result;
+            return modelMapper.map(credentials, CredentialResponse.class);
         });
     }
-
-    @Override
-    public Flux<CredentialResponse> credentialByHeader(String idCargo, String username) {
-        return null;
-    }
-
-//    @Override
-//    public Flux<CredentialResponse> credentialByHeader(String idCargo, String username) {
-//        return repository.findCredentialByHeader(idCargo, username);
-//    }
-
 
     private DataCredentials upCred(CredentialRequest dto){
         return DataCredentials.builder()

@@ -17,6 +17,6 @@ public interface CredentialService {
 
     Mono<CredentialResponse> update(String id, CredentialRequest request);
 
-    Flux<CredentialResponse> credentialByHeader(String idCargo, String username);
+    Flux<CredentialResponse> byHeader(String idCargo);
 
 }

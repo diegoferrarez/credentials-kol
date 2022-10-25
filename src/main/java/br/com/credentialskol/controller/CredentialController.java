@@ -21,13 +21,11 @@ public class CredentialController {
     @Autowired
     private CredentialService service;
 
-//    @ApiOperation("")
-//    @GetMapping("/byheader")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Flux<CredentialResponse> credentialHeader(@RequestHeader(name = "LGN-Id-Cargo") String idCargo,
-//                                                       @RequestHeader(name = "LGN - username") String username){
-//        return service.credentialByHeader(idCargo, username);
-//    }
+    @GetMapping("/byHeader")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<CredentialResponse> getCredentialByHeader(@RequestHeader(value = "LGN-id-cargo") String idCargo){
+        return service.byHeader(idCargo);
+    }
 
     @ApiOperation("busca todas as credenciais")
     @GetMapping

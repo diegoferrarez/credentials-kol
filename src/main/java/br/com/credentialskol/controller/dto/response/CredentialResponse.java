@@ -1,5 +1,6 @@
 package br.com.credentialskol.controller.dto.response;
 
+import br.com.credentialskol.domain.Entities.DataCredentials;
 import br.com.credentialskol.domain.StatusCredentials;
 import br.com.credentialskol.utils.CriptoCredential;
 import lombok.AllArgsConstructor;
@@ -21,15 +22,14 @@ public class CredentialResponse {
     private String password;
     private StatusCredentials status;
 
-    public static CredentialResponse converter(CredentialResponse c) {
-        String password = CriptoCredential.descriptografarBase64(c.getPassword());
+    public static CredentialResponse converte(DataCredentials c) {
         return CredentialResponse.builder()
                 .id(c.getId())
                 .idCargo(c.getIdCargo())
                 .cargo(c.getCargo())
                 .name(c.getName())
                 .username(c.getUsername())
-                .password(password)
+                .password(c.getPassword())
                 .status(c.getStatus())
                 .build();
     }
